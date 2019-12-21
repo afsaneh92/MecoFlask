@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Graph project</title>
+		<script src="{{ url_for('static', filename='jquery-3.4.1.js') }}"></script>
+        <script src="{{ url_for('static', filename='jquery-1.8.3.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='loader.js') }}"></script>
+		<script src="{{ url_for('static', filename='plotly-latest.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='d3.min.js') }}"></script>
+
+<!--		<form action="/data.json" method="post" id="searchForm">-->
+<!--			{% for proc in procss %}-->
+<!--				{{proc }} <input type="checkbox" name={{procss.index(proc)}} id=myCheck value={{proc[2]}} ><br/>-->
+<!--			 {% endfor %}-->
+<!--		<input type='submit' value='Select' >-->
+<!--		</form>-->
+
+<div id="result"></div>
+
+<script>
+// Attach a submit handler to the form
+$( "#searchForm" ).submit(function( event ) {
+
+  // Stop form from submitting normally
+  event.preventDefault();
+
+  // Get some values from elements on the page:
+  var $form = $( this ),
+<!--	var term = []-->
+<!--    var checked = $form.find( "input[name=0]" ).attr('checked');-->
+<!--    if (checked ==  true){-->
+<!--    	var term0 = $form.find( "input[name=0]" ).val(),-->
+<!--    	$(term).append( $term0) }-->
+
+<!--    var checked = $form.find( "input[name=1]" ).attr('checked');-->
+<!--    if (checked ==  true){-->
+<!--    	var term1 = $form.find( "input[name=1]" ).val(),-->
+<!--    	$(term).append( $term1)}-->
+
+<!--    var checked = $form.find( "input[name=2]" ).attr('checked');-->
+<!--    if (checked ==  true){-->
+<!--    	var term2 = $form.find( "input[name=2]" ).val(),-->
+<!--    	$(term).append( $term2)}-->
+
+	term0 = $form.find( "input[name=0]" ).val(),
+	term1 = $form.find( "input[name=1]" ).val(),
+	term2 = $form.find( "input[name=2]" ).val(),
+
+
+    term = [term1]
+
+    url = $form.attr( "action" );
+
+	var myJSON = JSON.stringify(term);
+
+   var posting = $.post( url, { javascript_data: myJSON } );
+	console.log("herreeeee");
+
+   posting.done(function( data ) {
+  			var content = $( data ).find( "#content" );
+
+<!--  			$.each(data,function( data ){-->
+<!--  			myFunction(data)-->
+<!--  			});-->
+	  });
+
+	  $(function () {
+		$.getJSON('http://127.0.0.1:5000/data.json', function (data) {
+			// Create the chart
+<!--			$.each(data,function( data )){-->
+   			myFunction(data )
+<!--   			});-->
+		});
+	});
+
+});
+</script>
+
+<script type="text/javascript">
+
+$(function () {
+    $.getJSON('http://127.0.0.1:5000/data.json', function (data) {
+        // Create the chart
+        myFunction(data)
+    });
+});
+
+</script>
+
+ <script>
+	function myFunction(item ) {
+		console.log("herreeeee");
+		// Create the chart
+		$('#container').highcharts('StockChart', {
+					rangeSelector : {
+						selected : 1
+					},
+
+					title : {
+						text : 'My CPU Percent'
+					},
+					series : [{
+						name : 'Value',
+						data : item,
+						tooltip: {
+							valueDecimals: 2
+						}
+					}]
+				});
+	}
+
+ </script>
+
+<script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+			{% for key, value in data.items() %}
+				{% if value is string %}
+					['{{ key }}', '{{ value }}'],
+				{% else %}
+					['{{ key }}', {{ value }}],
+				{% endif %}
+			{% endfor %}
+        ]);
+
+        var options = {
+          title: 'Memory State',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
+
+	</head>
+	<body>
+<script src="{{ url_for('static', filename='highstock.js') }}"></script>
+<script src="{{ url_for('static', filename='highcharts-more.js') }}"></script>
+<script src="{{ url_for('static', filename='exporting.js') }}"></script>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+	<div style="margin: 10px 0 0 10px;width: 1000px">
+		<div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+	</div>
+
+	<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart" id="bargraph">
+				<script>
+						var graphs = {{plot | safe}};
+						Plotly.plot('bargraph',graphs,{});
+    			</script>
+            </div>
+        </div>
+    </div>
+	</div>
+	</body>
+</html>
