@@ -1,7 +1,7 @@
 import sqlite3
 import time
 from random import randint
-
+import datetime
 import psutil
 
 
@@ -25,26 +25,29 @@ def clear_table():
     conn.commit()
 
 
-def main():
+def main(id):
     sqlite_file = 'db.sqlite'
     # timestamp_begin = 1576332717  # 01/01/14 00:00
     # timestamp_end = timestamp_begin +  60*100
     timestamp_end = time.time()
-    timestamp_begin = timestamp_end-100
+    timestamp_begin = timestamp_end-10
     pitch = 1
 
     try:
         conn = sqlite3.connect(sqlite_file)
         c = conn.cursor()
         timestamp = timestamp_begin
-        # id = id
+        ids = id
         while timestamp <= timestamp_end:
             print("Iterations left :", (timestamp_end - timestamp) / pitch)
             # measure = randint(0, 9)
-            measure = psutil.cpu_percent()
-            conn.execute(
-                "INSERT INTO measures (timestamp, measure) VALUES ({timestamp}, {measure})".format(timestamp=timestamp,
-                                                                                                   measure=measure))
+            date_time = datetime.datetime.fromtimestamp(timestamp).isoformat()
+
+            for id in ids:
+                measure = psutil.cpu_percent(id)
+                conn.execute(
+                    "INSERT INTO measures (timestamp, measure,id) VALUES ({timestamp}, {measure}, {id})".format(timestamp=timestamp,
+                                                                                                   measure=measure, id=id))
             conn.commit()
             timestamp += pitch
     except Exception as e:

@@ -1,5 +1,25 @@
 <!DOCTYPE HTML>
 <html>
+<style>
+    .symbol {
+    width:20px;
+    height:20px;
+    margin-right:20px;
+    float:left;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+.serieName {
+    float:left;
+    cursor:pointer;
+}
+
+.item {
+    height:40px;
+    clear:both;
+}
+</style>
+
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Graph project</title>
@@ -80,37 +100,53 @@ $( "#searchForm" ).submit(function( event ) {
 <script type="text/javascript">
 
 $(function () {
-    $.getJSON('http://127.0.0.1:5000/data.json', function (data) {
-        // Create the chart
-        myFunction(data)
+     $.getJSON('http://127.0.0.1:5000/names.json', function (data) {
+        console.log(data);
+        var names = data
+
+		$.getJSON('http://127.0.0.1:5000/data.json', function (data) {
+			console.log(data);
+            myFunction(data, names);
+
+		});
     });
 });
 
+
+function myFunction(data, names) {
+    $('#container').highcharts({
+        title: {
+            text: ''
+        },
+        legend: {
+            enabled: false
+        },
+
+        series: [{name: names[0], data: data[0]},{name: names[1], data: data[1]},{name: names[2], data: data[2]}]
+    }, function (chart) {
+
+        $legend = $('#customLegend');
+
+        $.each(chart.series, function (j, series) {
+
+            $legend.append('<div class="item"><div class="symbol" style="background-color:'+series.color+'"></div><div class="serieName" id="">' + series.name + '</div></div>');
+
+        });
+
+        $('#customLegend .item').click(function(){
+            var inx = $(this).index(),
+                series = chart.series[inx];
+
+            if(series.visible)
+                series.setVisible(false);
+            else
+                series.setVisible(true);
+        });
+
+    });
+};
 </script>
 
- <script>
-	function myFunction(item ) {
-		console.log("herreeeee");
-		// Create the chart
-		$('#container').highcharts('StockChart', {
-					rangeSelector : {
-						selected : 1
-					},
-
-					title : {
-						text : 'My CPU Percent'
-					},
-					series : [{
-						name : 'Value',
-						data : item,
-						tooltip: {
-							valueDecimals: 2
-						}
-					}]
-				});
-	}
-
- </script>
 
 <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
@@ -141,7 +177,10 @@ $(function () {
 <script src="{{ url_for('static', filename='highstock.js') }}"></script>
 <script src="{{ url_for('static', filename='highcharts-more.js') }}"></script>
 <script src="{{ url_for('static', filename='exporting.js') }}"></script>
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div class="trend">
+	<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+	<div id="customLegend" style="margin:50 px auto"></div>
+</div>
 
 	<div style="margin: 10px 0 0 10px;width: 1000px">
 		<div id="piechart_3d" style="width: 900px; height: 500px;"></div>
