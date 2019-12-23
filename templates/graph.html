@@ -1,6 +1,24 @@
 <!DOCTYPE HTML>
 <html>
 <style>
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
     .symbol {
     width:20px;
     height:20px;
@@ -118,6 +136,7 @@ function myFunction(data, names) {
         title: {
             text: ''
         },
+
         legend: {
             enabled: false
         },
@@ -182,21 +201,23 @@ function myFunction(data, names) {
 	<div id="customLegend" style="margin:50 px auto"></div>
 </div>
 
-	<div style="margin: 10px 0 0 10px;width: 1000px">
-		<div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+
+<div class="row">
+  <div class="column">
+    <div style="margin: 10px 0 0 10px;width: 1000px">
+			<div id="piechart_3d" style="width: 600px; height: 600px;"></div>
 	</div>
 
-	<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="chart" id="bargraph">
-				<script>
-						var graphs = {{plot | safe}};
-						Plotly.plot('bargraph',graphs,{});
-    			</script>
-            </div>
-        </div>
-    </div>
-	</div>
-	</body>
+  </div>
+  <div class="column" >
+	<div class="chart" id="bargraph" style="width: 500px; height: 500px;">
+		<script>
+				var graphs = {{plot | safe}};
+				Plotly.plot('bargraph',graphs,{});
+		</script>
+	   </div>
+  </div>
+</div>
+
+</body>
 </html>

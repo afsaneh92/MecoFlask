@@ -32,7 +32,7 @@ $(document).ready(function() {
             }
         },
         title: {
-            text: 'Live random data'
+            text: 'Live cpu data'
         },
         xAxis: {
             type: 'datetime',
@@ -48,7 +48,7 @@ $(document).ready(function() {
             }
         },
         series: [{
-            name: 'Random data',
+            name: 'cpu percent',
             data: []
         }]
     });

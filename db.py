@@ -30,7 +30,7 @@ def main(id):
     # timestamp_begin = 1576332717  # 01/01/14 00:00
     # timestamp_end = timestamp_begin +  60*100
     timestamp_end = time.time()
-    timestamp_begin = timestamp_end-10
+    timestamp_begin = timestamp_end-100
     pitch = 1
 
     try:

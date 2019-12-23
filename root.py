@@ -57,28 +57,27 @@ def data():
 @app.route("/")
 def graph():
     # clear the table
-    # db.clear_table()
+    db.clear_table()
 
     if request.method == 'GET':
-        names = []
+
         psutil.cpu_percent(interval=1)
         procs = psutil.process_iter()
         all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
         procss = all_procs[:3]
-        for proc in all_procs[:3]:
-            names.append(proc[1])
+
         ids = []
         for proc in all_procs[:3]:
             print(id)
             ids.append(proc[2])
-        # db.main(ids)
+        db.main(ids)
         mem = psutil.virtual_memory()
         # bar chart
         bar = create_plot(mem)
         # pie chart
         data = {'Memory': 'bytes', 'total': mem.total, 'available': mem.available, 'used': mem.used, 'free': mem.free}
 
-        return render_template('graph.html', procss=procss, data=data, plot=bar, names=names)
+        return render_template('graph.html', procss=procss, data=data, plot=bar)
 
 
 @app.route('/live-graph')
@@ -88,7 +87,7 @@ def hello_world():
 
 @app.route('/live-data')
 def live_data():
-    # Create a PHP array and echo it as JSON
+
     data = [time() * 1000, psutil.cpu_percent()]
     response = make_response(json.dumps(data))
     response.content_type = 'application/json'
