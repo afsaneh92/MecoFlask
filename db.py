@@ -9,9 +9,11 @@ def database():
     sqlite_file = 'db.sqlite'
     conn = sqlite3.connect(sqlite_file)
     c = conn.cursor()
-
     conn.execute("DROP TABLE measures")
+    conn.execute("DROP TABLE livedata")
     conn.execute("CREATE TABLE measures (timestamp DATETIME, measure INTEGER, id INTEGER)")
+    conn.execute("CREATE TABLE livedata (timestamp DATETIME, measure INTEGER)")
+
     conn.commit()
     conn.close()
 
@@ -48,7 +50,7 @@ def main(id):
                 conn.execute(
                     "INSERT INTO measures (timestamp, measure,id) VALUES ({timestamp}, {measure}, {id})".format(timestamp=timestamp,
                                                                                                    measure=measure, id=id))
-            conn.commit()
+                conn.commit()
             timestamp += pitch
     except Exception as e:
         conn.rollback()

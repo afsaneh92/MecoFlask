@@ -87,8 +87,17 @@ def hello_world():
 
 @app.route('/live-data')
 def live_data():
+    timestamp = time()
+    measure = psutil.cpu_percent()
+    con = sqlite3.connect("db.sqlite")
+    cursor = con.cursor()
+    cursor.execute(
+        "INSERT INTO livedata (timestamp, measure) VALUES ({timestamp}, {measure})".format(timestamp=timestamp,
+                                                                                                    measure=measure))
+    con.commit()
+    con.close()
 
-    data = [time() * 1000, psutil.cpu_percent()]
+    data = [timestamp * 1000, measure]
     response = make_response(json.dumps(data))
     response.content_type = 'application/json'
     return response

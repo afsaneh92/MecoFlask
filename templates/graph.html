@@ -191,8 +191,8 @@ function myFunction(data, names) {
       }
     </script>
 
-	</head>
-	<body>
+</head>
+<body>
 <script src="{{ url_for('static', filename='highstock.js') }}"></script>
 <script src="{{ url_for('static', filename='highcharts-more.js') }}"></script>
 <script src="{{ url_for('static', filename='exporting.js') }}"></script>
@@ -205,12 +205,12 @@ function myFunction(data, names) {
 <div class="row">
   <div class="column">
     <div style="margin: 10px 0 0 10px;width: 1000px">
-			<div id="piechart_3d" style="width: 600px; height: 600px;"></div>
+			<div id="piechart_3d" style="width: 700px; height: 700px;"></div>
 	</div>
 
   </div>
   <div class="column" >
-	<div class="chart" id="bargraph" style="width: 500px; height: 500px;">
+	<div class="chart" id="bargraph" style="width: 600px; height: 600px;">
 		<script>
 				var graphs = {{plot | safe}};
 				Plotly.plot('bargraph',graphs,{});
